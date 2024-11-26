@@ -52,7 +52,7 @@ jobs:
       - name: Authenticate with GKE
         run: |
           gcloud container clusters get-credentials ${{inputs.action.gke_cluster_name}} \
-          --zone us-east1-b
+          --region asia-southeast1
 
 
       - name: Apply K8s manifest file
