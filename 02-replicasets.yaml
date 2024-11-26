@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        key: template-value
+        key: replica-value
     spec:
       containers:
         - name: myapp
