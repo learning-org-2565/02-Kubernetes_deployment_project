@@ -43,6 +43,15 @@ on:
         options:
           - 'us-east1-b'
           - 'asia-southeast1'
+      manifest_file:
+        description: 'select the manifest deployment file'
+        default: '02-replicasets.yaml'
+        required: true
+        type: choice
+        options:
+          - '01-nginx-deployment.yaml'
+          - '02-replicasets.yaml'
+
           
 
 
@@ -81,9 +90,7 @@ jobs:
       - name: Delete the k8s manifest file
         if: ${{ inputs.action == 'delete' }}
         run: |
-            kubectl delete -f 02-replicasets.yaml
+            kubectl delete -f ${{inputs.manifest_file}}
       
-      - name: Check Deployment Rollout Status
-        run: |
-            kubectl rollout status deployment/nginx-deployment
+      
           
