@@ -13,18 +13,18 @@ on:
         required: true
       gke_cluster_name:
         description: 'select the gke cluster name'
-        default: tmproject-dev-private-cluster
+        default: 'tmproject-dev-private-cluster'
         required: true
         type: choice
         options:
-          - tmproject-dev-private-cluster
+          - 'tmproject-dev-private-cluster'
       gcp_project:
         description: 'select the project'
-        default: turnkey-guild-441104-f3
+        default: 'turnkey-guild-441104-f3'
         required: true
         type: choice
         options:
-          - turnkey-guild-441104-f3
+          - 'turnkey-guild-441104-f3'
 
 
 jobs:
@@ -51,7 +51,7 @@ jobs:
       
       - name: Authenticate with GKE
         run: |
-          gcloud container clusters get-credentials ${{inputs.action.gke_cluster_name}} \
+          gcloud container clusters get-credentials ${{inputs.gke_cluster_name}} \
           --region asia-southeast1
 
 
