@@ -13,11 +13,12 @@ on:
         required: true
       gke_cluster_name:
         description: 'select the gke cluster name'
-        default: 'tmproject-dev-private-cluster'
+        default: 'sap-dev-gke-cluster'
         required: true
         type: choice
         options:
           - 'tmproject-dev-private-cluster'
+          - 'sap-dev-gke-cluster'
       gcp_project:
         description: 'select the project'
         default: 'turnkey-guild-441104-f3'
@@ -25,6 +26,24 @@ on:
         type: choice
         options:
           - 'turnkey-guild-441104-f3'
+
+      gcp_region_zone:
+        description: 'select the region or zone'
+        default: 'zone'
+        required: true
+        type: choice
+        options:
+          - 'zone'
+          - 'region'
+      gcp_location:
+        description: 'select the location'
+        default: 'us-east1-b'
+        required: true
+        type: choice
+        options:
+          - 'us-east1-b'
+          - 'asia-southeast1'
+          
 
 
 jobs:
@@ -52,7 +71,7 @@ jobs:
       - name: Authenticate with GKE
         run: |
           gcloud container clusters get-credentials ${{inputs.gke_cluster_name}} \
-          --region asia-southeast1
+          --${{inputs.gcp_region_zone}} ${{inputs.gcp_location}}
 
 
       - name: Apply K8s manifest file
