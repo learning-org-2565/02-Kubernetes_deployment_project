@@ -11,6 +11,21 @@ on:
           - apply
           - delete
         required: true
+      gke_cluster_name:
+        description: 'select the gke cluster name'
+        default: tmproject-dev-private-cluster
+        required: true
+        type: choice
+        options:
+          - tmproject-dev-private-cluster
+      gcp_project:
+        description: 'select the project'
+        default: turnkey-guild-441104-f3
+        required: true
+        type: choice
+        options:
+          - turnkey-guild-441104-f3
+
 
 jobs:
   k8s-deployment-2:
@@ -28,7 +43,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: ${{ inputs.action.gcp_project }}
 
       - name: Install gke-gcloud-auth-plugin
         run: |
@@ -36,18 +51,18 @@ jobs:
       
       - name: Authenticate with GKE
         run: |
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
+          gcloud container clusters get-credentials ${{inputs.action.gke_cluster_name}} \
           --zone us-east1-b
 
 
       - name: Apply K8s manifest file
         if: ${{ inputs.action == 'apply' }}
         run: |
-            kubectl apply -f nginx-deployment.yaml
+            kubectl apply -f 02-replicasets.yaml
       - name: Delete the k8s manifest file
         if: ${{ inputs.action == 'delete' }}
         run: |
-            kubectl delete -f nginx-deployment.yaml
+            kubectl delete -f 02-replicasets.yaml
       
       - name: Check Deployment Rollout Status
         run: |
