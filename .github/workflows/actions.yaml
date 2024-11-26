@@ -1,0 +1,48 @@
+name: 01-actions workflow   
+
+on: 
+    #push: 
+    workflow_dispatch: 
+        inputs:
+            action:
+                description: want to deploy this file
+                default: yes 
+                type: choice
+                options:
+                    - yes
+                    - no
+                required: true
+
+jobs:
+    k8s-deployment:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout the code
+              uses: actions/checkout@v4
+        
+            - name: Set up Google Cloud SDK
+              uses: google-github-actions/setup-gcloud@v2  # Updated to latest version
+              with:
+                project_id: ${{ secrets.GCP_PROJECT_ID }}
+                install_components: 'beta'
+            
+            - name: Authenticate to Google Cloud
+              uses: google-github-actions/auth@v2  # Updated to latest version
+              with:
+                credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+        
+            # Install gke-gcloud-auth-plugin
+            - name: Install gke-gcloud-auth-plugin
+              run: gcloud components install gke-gcloud-auth-plugin
+
+            # Step 3: Authenticate with GKE
+            - name: Authenticate with GKE
+              run: |
+                    gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
+                    --zone us-east1-b
+
+           # Step 4: Apply Kubernetes Manifest 
+            - name: Apply Kubernetes Manifest
+              run: |
+                kubectl delete -f nginx-deployment.yaml
