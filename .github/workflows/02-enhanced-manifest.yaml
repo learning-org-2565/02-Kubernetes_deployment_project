@@ -51,6 +51,7 @@ on:
         options:
           - '01-nginx-deployment.yaml'
           - '02-replicasets.yaml'
+          - '03-Deployment_manifest.yaml'
 
           
 
