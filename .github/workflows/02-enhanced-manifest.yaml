@@ -1,4 +1,4 @@
-name: 02-Enhanced workflow for deployment
+name: ${{inputs.manifest_file}}
 
 on: 
   workflow_dispatch: 
