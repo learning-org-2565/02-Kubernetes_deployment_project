@@ -1,4 +1,4 @@
-name: ${{inputs.manifest_file}}
+name: 02-manifest-file-deployment
 
 on: 
   workflow_dispatch: 
