@@ -87,7 +87,7 @@ jobs:
       - name: Apply K8s manifest file
         if: ${{ inputs.action == 'apply' }}
         run: |
-            kubectl apply -f 02-replicasets.yaml
+            kubectl apply -f ${{inputs.manifest_file}}
       - name: Delete the k8s manifest file
         if: ${{ inputs.action == 'delete' }}
         run: |
