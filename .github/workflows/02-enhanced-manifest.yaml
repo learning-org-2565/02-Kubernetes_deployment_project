@@ -53,6 +53,7 @@ on:
           - '02-replicasets.yaml'
           - '03-Deployment_manifest.yaml'
           - '04-Service_manifest.yaml'
+          - '05-ReplicaSet.yaml'
 
           
 
