@@ -1,17 +1,27 @@
-apiVersion: v1 
-kind: Service #service gets the outside traffic from ingress and tranfer to the pods, it act like a mediater 
-metadata: 
-  name: service-for-communication
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
   labels:
-    env: dev
-spec: 
-  type: LoadBalancer 
-  #loadbalancer will create the public IP and expose this container app to the internet directly,
+    app.kubernetes.io/name: proxy
+spec:
+  containers:
+  - name: nginx
+    image: nginx:stable
+    ports:
+      - containerPort: 80
+        name: http-web-svc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
   selector:
-    env: dev #this should key value should match to the pod lablel so that service will stablish the conncetion between
+    app.kubernetes.io/name: proxy
   ports:
-    - name: http 
-    #we have to give right port number , if it is loadbalancer we should give 80, becuse loadbalcner expose for http
-      port: 80 # service port
-      targetPort: 80 # container port
-      # both are going to talk each other
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: http-web-svc

@@ -1,28 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment-object
-  labels:
-    env: dev
+  name: myapp
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      env: dev 
+      app: myapp
   template:
     metadata:
       labels:
-        env: dev
+        app: myapp
     spec:
       containers:
-        - name: nginx-image
-          image: nginx:latest
-          ports:
-          - containerPort: 80
-          # resources:
-          #   requests:
-          #     memory: "128Mi"
-          #     cpu: "500m"
-          #   limits:
-          #     memory: "128Mi"
-          #     cpu: "500m"
+      - name: myapp
+        image: nginx:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
