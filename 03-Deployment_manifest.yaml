@@ -3,18 +3,16 @@ kind: Deployment
 metadata:
   name: deployment-object
   labels:
-    app: nginx
+  
     env: dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
       env: dev 
   template:
     metadata:
       labels:
-        app: nginx
         env: dev
          #this should key value should match to the pod lablel so that service will stablish the conncetion between
 
