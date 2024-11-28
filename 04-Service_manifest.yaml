@@ -5,7 +5,7 @@ metadata:
   labels:
     env: dev 
 spec: 
-  type: loadBalancer 
+  type: LoadBalancer 
   #loadbalancer will create the public IP and expose this container app to the internet directly,
   selector:
     env: dev #this should key value should match to the pod lablel so that service will stablish the conncetion between
