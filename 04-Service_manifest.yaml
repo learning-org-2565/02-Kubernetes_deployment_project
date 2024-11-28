@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: nginx
   labels:
-    app.kubernetes.io/name: proxy
+    app.kubernetes.io/name: MyApp
 spec:
   containers:
   - name: nginx
@@ -16,12 +16,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
+  name: my-service
 spec:
   selector:
-    app.kubernetes.io/name: proxy
+    app.kubernetes.io/name: MyApp
   ports:
-  - name: name-of-service-port
-    protocol: TCP
-    port: 80
-    targetPort: http-web-svc
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
