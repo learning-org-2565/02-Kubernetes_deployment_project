@@ -14,8 +14,7 @@ spec:
     metadata:
       labels:
         env: dev
-         #this should key value should match to the pod lablel so that service will stablish the conncetion between
-
+        
     spec:
       containers:
         - name: nginx-image
