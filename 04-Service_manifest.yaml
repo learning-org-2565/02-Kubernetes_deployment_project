@@ -3,11 +3,13 @@ kind: Service #service gets the outside traffic from ingress and tranfer to the 
 metadata: 
   name: service-for-communication
   labels:
-    env: dev 
+    env: dev
+    app: nginx 
 spec: 
   type: LoadBalancer 
   #loadbalancer will create the public IP and expose this container app to the internet directly,
   selector:
+    app: nginx
     env: dev #this should key value should match to the pod lablel so that service will stablish the conncetion between
   ports:
     - name: http 
