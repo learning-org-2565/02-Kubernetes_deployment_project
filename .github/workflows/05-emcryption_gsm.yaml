@@ -1,4 +1,4 @@
-name: 05-UpdatePassword secret
+name: 05-Updategsm
 
 on: 
   workflow_dispatch: 
