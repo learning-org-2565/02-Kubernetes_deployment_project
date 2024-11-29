@@ -74,15 +74,27 @@ jobs:
           gcloud container clusters get-credentials ${{inputs.gke_cluster_name}} \
           --${{inputs.gcp_region_zone}} ${{inputs.gcp_location}}
 
-      - name: Encrypt the root password
+      - name: Encrypt root password inside container
         run: |
-          # Define the command to run in the container
-          ENCRYPT_COMMAND="echo '${{ inputs.root_password }}' | base64"
+          # Check if password_manager exists
+          which password_manager || echo "password_manager not found"
+          
+          # Check if keystore file exists
+          kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- ls -l /opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore
+          
+          # Run the password encryption command
+          kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- /bin/bash -c "./password_manager -g -k /opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore -a '${{ inputs.root_password }}' || echo 'Error running password_manager'"
 
-          # Check if container name is provided
-          if [[ -n "${{ inputs.container_name }}" ]]; then
-            kubectl exec -it ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- /bin/bash -c "$ENCRYPT_COMMAND"
-          else
-            kubectl exec -it ${{ inputs.pod_name }} -- /bin/bash -c "$ENCRYPT_COMMAND"
-          fi
-        shell: bash
+
+    #   - name: Encrypt the root password
+    #     run: |
+    #       # Define the command to run in the container
+    #       ENCRYPT_COMMAND="echo '${{ inputs.root_password }}' | base64"
+
+    #       # Check if container name is provided
+    #       if [[ -n "${{ inputs.container_name }}" ]]; then
+    #         kubectl exec -it ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- /bin/bash -c "$ENCRYPT_COMMAND"
+    #       else
+    #         kubectl exec -it ${{ inputs.pod_name }} -- /bin/bash -c "$ENCRYPT_COMMAND"
+    #       fi
+    #     shell: bash
