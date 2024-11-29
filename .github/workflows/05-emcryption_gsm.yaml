@@ -1,8 +1,10 @@
 name: 05-Updategsm
 
 on: 
-  workflow_dispatch: 
+  workflow_dispatch:
+
     inputs:
+      
       secret_name:
         description: "Enter the Google Secret Manager secret name"
         default: "secret-auto-123"

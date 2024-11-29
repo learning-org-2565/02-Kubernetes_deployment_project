@@ -3,14 +3,10 @@ name: 04-Update Password Inside Container
 on: 
   workflow_dispatch: 
     inputs:
-      root_password:
-        description: "Provide the root password"
-        required: true
-        type: string
-      pod_name:
-        description: "Enter the pod name where the container is running"
-        required: true
-        type: string
+    #   pod_name:
+    #     description: "Enter the pod name where the container is running"
+    #     required: true
+    #     type: string
       container_name:
         description: "Enter the container name (optional)"
         required: false
@@ -46,6 +42,10 @@ on:
         options:
           - 'us-east1-b'
           - 'asia-southeast1'
+      secret_name:
+        description: "Enter the Google Secret Manager secret name"
+        default: "secret-auto-123"
+        required: true
 
 jobs:
   k8s-deployment-2:
@@ -74,16 +74,46 @@ jobs:
           gcloud container clusters get-credentials ${{inputs.gke_cluster_name}} \
           --${{inputs.gcp_region_zone}} ${{inputs.gcp_location}}
 
-      - name: Encrypt root password inside container
+      - name: Retrieve Secret from Google Secret Manager
+        id: retrieve-secret
         run: |
-          # Check if password_manager exists
-          which password_manager || echo "password_manager not found"
+            # Fetch the secret value from Google Secret Manager
+            SECRET_VALUE=$(gcloud secrets versions access latest \
+                --secret=${{ inputs.secret_name }} \
+                --project=${{ inputs.gcp_project }})
+  
+            if [[ -z "$SECRET_VALUE" ]]; then
+                echo "Error: Secret value could not be retrieved."
+                exit 1
+            fi
+
+            echo "SECRET_VALUE=$SECRET_VALUE" >> $GITHUB_ENV
+        shell: bash
+    
+      - name: Verify Secret Retrieval
+        run: |
+            echo "Retrieved secret successfully."
+            echo "The secret starts with: ${SECRET_VALUE:0:5}****" # Mask for security
+
+      - name: Encrypt Password Inside Container
+        run: |
+            # Check if password_manager exists
+            kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- which password_manager || echo "password_manager not found"
+
+            # Run encryption command with retrieved secret
+            kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- /bin/bash -c "./password_manager -g -k /opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore -a '${SECRET_VALUE}' || echo 'Error running password_manager'"
+        shell: bash
+
+    #   - name: Encrypt root password inside container
+    #     run: |
+    #       # Check if password_manager exists
+    #       which password_manager || echo "password_manager not found"
           
-          # Check if keystore file exists
-          kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- ls -l /opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore
+    #       # Check if keystore file exists
+    #       kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- ls -l /opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore
           
-          # Run the password encryption command
-          kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- /bin/bash -c "./password_manager -g -k /opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore -a '${{ inputs.root_password }}' || echo 'Error running password_manager'"
+    #       # Run the password encryption command
+    #       kubectl exec -i ${{ inputs.pod_name }} -c ${{ inputs.container_name }} -- /bin/bash -c "./password_manager -g -k /opt/actimize/ais_server/Instances/actimize_server_1/ais.keystore -a '${{ inputs.root_password }}' || echo 'Error running password_manager'"
 
 
     #   - name: Encrypt the root password
