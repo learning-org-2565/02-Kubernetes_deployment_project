@@ -1,4 +1,4 @@
-name: Update Password Inside Container
+name: 04-Update Password Inside Container
 
 on: 
   workflow_dispatch: 
@@ -62,7 +62,8 @@ jobs:
       
       - name: Install gke-gcloud-auth-plugin
         run: |
-          gcloud components install gke-gcloud-auth-plugin
+          sudo apt-get update
+          sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
 
       - name: Authenticate with GKE
         run: |

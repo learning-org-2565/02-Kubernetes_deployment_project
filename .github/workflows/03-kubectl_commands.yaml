@@ -1,4 +1,4 @@
-name: 02-manifest-file-deployment
+name: 03-kubectl-commands
 
 on: 
   workflow_dispatch: 
