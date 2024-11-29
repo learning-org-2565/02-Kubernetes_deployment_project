@@ -54,7 +54,7 @@ on:
           - '03-Deployment_manifest.yaml'
           - '04-Service_manifest.yaml'
           - '05-ReplicaSet.yaml'
-      kubectl_command:
+      kubectl-command:
         description: 'Specify the kubectl command to execute'
         default: 'kubectl get pods'
         required: false
@@ -99,5 +99,5 @@ jobs:
       - name: Execute kubectl command
         if: ${{ inputs.action == 'kubectl-command' }}
         run: |
-          echo "Running kubectl command: ${{ inputs.kubectl_command }}"
-          ${{ inputs.kubectl_command }}
+          echo "Running kubectl command: ${{ inputs.kubectl-command }}"
+          ${{ inputs.kubectl-command }}
