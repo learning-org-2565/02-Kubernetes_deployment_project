@@ -48,12 +48,17 @@ on:
           - 'asia-southeast1'
 
 jobs:
-  update-password:
+  k8s-deployment-2:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout the code
         uses: actions/checkout@v4
+      
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.action.gcp_project }}
+          install_components: 'beta'
       
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -61,12 +66,13 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Install gke-gcloud-auth-plugin
-        run: gcloud components install gke-gcloud-auth-plugin
-
+        run: |
+            gcloud components install gke-gcloud-auth-plugin
+      
       - name: Authenticate with GKE
         run: |
-          gcloud container clusters get-credentials ${{ inputs.gke_cluster_name }} \
-          --${{ inputs.gcp_region_zone }} ${{ inputs.gcp_location }}
+          gcloud container clusters get-credentials ${{inputs.gke_cluster_name}} \
+          --${{inputs.gcp_region_zone}} ${{inputs.gcp_location}}
 
       - name: Encrypt the root password
         run: |
