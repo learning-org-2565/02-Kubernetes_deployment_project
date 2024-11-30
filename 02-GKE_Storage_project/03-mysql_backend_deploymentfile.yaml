@@ -11,7 +11,8 @@ spec:
     type: Recreate
   template:
     metadata:
-      app: mysql 
+      labels:
+        app: mysql 
     spec:
       containers:
         - name: mysql

@@ -7,4 +7,4 @@ spec:
     app: mysql
   ports:
     - port: 3306
-  clusterIP: none  # we are going to use the POD ip headless
+  clusterIP: "None"  # we are going to use the POD ip headless
