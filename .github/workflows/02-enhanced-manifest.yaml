@@ -54,6 +54,7 @@ on:
           - '03-Deployment_manifest.yaml'
           - '04-Service_manifest.yaml'
           - '05-ReplicaSet.yaml'
+          - '02-GKE_Storage_project'
 
           
 
