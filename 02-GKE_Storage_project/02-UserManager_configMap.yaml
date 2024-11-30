@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermanagement-dbcreation-script
+data:
+  mysql_usermgmt.sql: |-
+    DROP DATABASE IF EXISTS webappdb;
+    CREATE DATABASE webappdb;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# config map
+# is used to store in the non-confidencial data in key-value pair
+# 1. pods can consume configmap as key-value pair
+# 2. env variable
+# 3. arguments as configuration files as volumes
+# 4. we are going to use this config map in th sql pod deployment
