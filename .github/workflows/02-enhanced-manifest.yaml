@@ -19,6 +19,7 @@ on:
         options:
           - 'tmproject-dev-private-cluster'
           - 'sap-dev-gke-cluster'
+          - ' gke-public-cluster'
       gcp_project:
         description: 'select the project'
         default: 'turnkey-guild-441104-f3'
@@ -43,9 +44,10 @@ on:
         options:
           - 'us-east1-b'
           - 'asia-southeast1'
+          - 'us-central1'
       manifest_file:
         description: 'select the manifest deployment file'
-        default: '02-replicasets.yaml'
+        default: '02-GKE_Storage_project'
         required: true
         type: choice
         options:
