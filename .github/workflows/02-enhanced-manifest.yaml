@@ -19,7 +19,11 @@ on:
         options:
           - 'tmproject-dev-private-cluster'
           - 'sap-dev-gke-cluster'
+<<<<<<< HEAD
           - ' gke-public-cluster'
+=======
+          - 'gke-public-cluster'
+>>>>>>> origin/main
       gcp_project:
         description: 'select the project'
         default: 'turnkey-guild-441104-f3'
