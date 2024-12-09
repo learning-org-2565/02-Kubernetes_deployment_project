@@ -95,4 +95,4 @@ jobs:
           export REGISTRY_URL="us-central1-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
           
           # Pull Helm chart to verify upload
-          helm pull oci://${REGISTRY_URL}/${{ inputs.helm_chart_path }} --version ${{ inputs.helm_chart_version }}
+          helm pull oci://${REGISTRY_URL}/$(ls *.tgz | head -n 1)
