@@ -91,6 +91,11 @@ jobs:
           ls -al myapp-1.0.5.tgz
           helm show chart myapp-1.0.5.tgz
 
+      - name: Log Helm Chart Download Link
+        run: |
+          echo "Chart OCI Link: oci://us-central1-docker.pkg.dev/turnkey-guild-441104-f3/helm/myapp --version 1.0.5"
+        
+
 
       # - name: Upload Helm Chart to Artifact Registry
       #   run: |
