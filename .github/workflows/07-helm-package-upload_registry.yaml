@@ -81,6 +81,16 @@ jobs:
           # Push Helm package to Artifact Registry
           helm push $HELM_PACKAGE oci://${REGISTRY_URL}
 
+      - name: Pull Helm Chart from Artifact Registry
+        run: |
+          export REGISTRY_URL="us-central1-docker.pkg.dev/turnkey-guild-441104-f3/helm"
+          helm pull oci://$REGISTRY_URL/myapp --version 1.0.5
+    
+      - name: Verify Downloaded Helm Chart
+        run: |
+          ls -al myapp-1.0.5.tgz
+          helm show chart myapp-1.0.5.tgz
+
 
       # - name: Upload Helm Chart to Artifact Registry
       #   run: |
@@ -90,9 +100,11 @@ jobs:
       #     # Push Helm package to Artifact Registry
       #     helm push $HELM_PACKAGE oci://${REGISTRY_URL}
 
-      - name: Verify Uploaded Helm Chart
-        run: |
-          export REGISTRY_URL="us-central1-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
+      # - name: Verify Uploaded Helm Chart
+      #   run: |
+      #     export REGISTRY_URL="us-central1-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
           
-          # Pull Helm chart to verify upload
-          helm pull oci://${REGISTRY_URL}/$(ls *.tgz | head -n 1)
+      #     # Pull Helm chart to verify upload
+      #     helm pull oci://${REGISTRY_URL}/$(ls *.tgz | head -n 1)
+
+    
