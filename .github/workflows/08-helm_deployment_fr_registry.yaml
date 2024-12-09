@@ -1,4 +1,4 @@
-name: 06-helm-deployment
+name: 08-helm-artifact registry
 
 on: 
   workflow_dispatch: 
