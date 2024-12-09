@@ -58,14 +58,26 @@ jobs:
         run: |
           helm package ${{ inputs.helm_chart_path }} --version ${{ inputs.helm_chart_version }}
           ls -al # List files to verify the .tgz package is created
-
+      
       - name: Upload Helm Chart to Artifact Registry
         run: |
-          export HELM_PACKAGE="${{ inputs.helm_chart_path }}-${{ inputs.helm_chart_version }}.tgz"
+          # Identify the latest packaged Helm chart file
+          export HELM_PACKAGE=$(ls *.tgz | head -n 1)
           export REGISTRY_URL="us-central1-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
+
+          echo "Uploading Helm package: $HELM_PACKAGE to Artifact Registry: $REGISTRY_URL"
           
           # Push Helm package to Artifact Registry
           helm push $HELM_PACKAGE oci://${REGISTRY_URL}
+
+
+      # - name: Upload Helm Chart to Artifact Registry
+      #   run: |
+      #     export HELM_PACKAGE="${{ inputs.helm_chart_path }}-${{ inputs.helm_chart_version }}.tgz"
+      #     export REGISTRY_URL="us-central1-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
+          
+      #     # Push Helm package to Artifact Registry
+      #     helm push $HELM_PACKAGE oci://${REGISTRY_URL}
 
       - name: Verify Uploaded Helm Chart
         run: |
