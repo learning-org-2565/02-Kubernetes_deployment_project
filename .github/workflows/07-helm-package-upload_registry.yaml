@@ -49,6 +49,16 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
+
+      - name: Authenticate Helm with Artifact Registry
+        run: |
+          gcloud auth print-access-token | helm registry login -u oauth2accesstoken --password-stdin us-central1-docker.pkg.dev
+
+      - name: Debug Artifact Registry Access
+        run: |
+          gcloud artifacts repositories list --location=us-central1
+          curl -H "Authorization: Bearer $(gcloud auth print-access-token)" "https://us-central1-docker.pkg.dev/v2/"
+
       - name: Install Helm
         uses: azure/setup-helm@v3
         with:
@@ -58,6 +68,7 @@ jobs:
         run: |
           helm package ${{ inputs.helm_chart_path }} --version ${{ inputs.helm_chart_version }}
           ls -al # List files to verify the .tgz package is created
+
       
       - name: Upload Helm Chart to Artifact Registry
         run: |
