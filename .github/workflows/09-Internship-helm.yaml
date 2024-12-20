@@ -27,6 +27,7 @@ on:
           - '03-myapp-chart'
           - '04-Internship-deployment/charts/frontend'
           - '04-Internship-deployment/charts/backend'
+          - '04-Internship-deployment/charts/database'
         type: choice
       helm_chart_version:
         description: 'Set the Helm chart version'
