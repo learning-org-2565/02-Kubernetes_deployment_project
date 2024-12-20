@@ -60,17 +60,23 @@ jobs:
 
       - name: Package the Helm Chart
         run: |
-          helm package ${{ inputs.helm_chart_path }} --version ${{ inputs.helm_chart_version }}
-          echo "Packaged Helm Chart:"
-          ls -al
+          helm package ${{ inputs.helm_chart_path }} --version ${{ inputs.helm_chart_version }} --destination ./packaged
+          ls -al ./packaged
+        
 
       - name: Upload Helm Chart to Artifact Registry
         run: |
-          export HELM_PACKAGE=$(ls *.tgz | grep ${{ inputs.helm_chart_path }} | head -n 1)
+          export HELM_PACKAGE=$(ls ./packaged/*.tgz | head -n 1) # Get the packaged chart file
           export REGISTRY_URL="${{ inputs.gcp_region }}-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
-
+      
+          if [ -z "$HELM_PACKAGE" ]; then
+            echo "Error: No Helm package found in ./packaged/"
+            exit 1
+          fi
+      
           echo "Uploading Helm package: $HELM_PACKAGE to Artifact Registry: $REGISTRY_URL"
           helm push $HELM_PACKAGE oci://${REGISTRY_URL}
+        
 
       - name: Pull Helm Chart from Artifact Registry
         run: |
