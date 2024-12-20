@@ -1,4 +1,4 @@
-name: Pull and Verify Helm Chart
+name: 9.2 Internship Helm Chart
 
 on:
   workflow_dispatch:
