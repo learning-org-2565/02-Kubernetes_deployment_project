@@ -21,11 +21,12 @@ on:
           - 'europe-west1'
       helm_chart_path:
         description: 'Select the Helm chart directory'
-        default: '04-Internship-deployment/charts/frontend'
+        default: '04-Internship-deployment/charts/backend'
         required: true
         options:
           - '03-myapp-chart'
           - '04-Internship-deployment/charts/frontend'
+          - '04-Internship-deployment/charts/backend'
         type: choice
       helm_chart_version:
         description: 'Set the Helm chart version'
