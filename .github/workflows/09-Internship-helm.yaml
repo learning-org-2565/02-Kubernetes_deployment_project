@@ -83,9 +83,10 @@ jobs:
       - name: Pull Helm Chart from Artifact Registry
         run: |
           export REGISTRY_URL="${{ inputs.gcp_region }}-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
-          helm pull oci://$REGISTRY_URL/${{ inputs.helm_chart_path }} --version ${{ inputs.helm_chart_version }}
-
+          helm pull oci://$REGISTRY_URL/${{ inputs.helm_chart_name }} --version ${{ inputs.helm_chart_version }}
+    
       - name: Verify Downloaded Helm Chart
         run: |
-          helm show chart ${{ inputs.helm_chart_path }}-${{ inputs.helm_chart_version }}.tgz
-          ls -al ${{ inputs.helm_chart_path }}-${{ inputs.helm_chart_version }}.tgz
+          ls -al . # List files to confirm the chart is pulled
+          helm show chart ./${{ inputs.helm_chart_name }}-${{ inputs.helm_chart_version }}.tgz
+        
