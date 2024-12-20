@@ -1,0 +1,70 @@
+name: Pull and Verify Helm Chart
+
+on:
+  workflow_dispatch:
+    inputs:
+      gcp_project:
+        description: 'Select the GCP project'
+        default: 'turnkey-guild-441104-f3'
+        required: true
+        type: choice
+        options:
+          - 'turnkey-guild-441104-f3'
+      gcp_region:
+        description: 'Select the GCP region for Artifact Registry'
+        default: 'us-central1'
+        required: true
+        type: choice
+        options:
+          - 'us-central1'
+          - 'asia-southeast1'
+          - 'europe-west1'
+      helm_chart_name:
+        description: 'Enter the Helm chart name (e.g., frontend, backend, database)'
+        default: 'frontend'
+        required: true
+        options:
+          - 'frontend'
+          - 'backend'
+          - 'database'
+        type: choice
+      helm_chart_version:
+        description: 'Set the Helm chart version'
+        default: '1.0.0'
+        required: true
+      helm_chart_path:
+        description: 'Select the Helm chart directory'
+        default: '04-Internship-deployment/charts/backend'
+        required: true
+        options:
+          - '03-myapp-chart'
+          - '04-Internship-deployment/charts/frontend'
+          - '04-Internship-deployment/charts/backend'
+          - '04-Internship-deployment/charts/database'
+        type: choice
+
+jobs:
+  pull-and-verify-helm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.gcp_project }}
+          install_components: 'beta'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Pull Helm Chart from Artifact Registry
+        run: |
+          export REGISTRY_URL="${{ inputs.gcp_region }}-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
+          helm pull oci://$REGISTRY_URL/${{ inputs.helm_chart_name }} --version ${{ inputs.helm_chart_version }}
+
+      - name: Verify Downloaded Helm Chart
+        run: |
+          ls -al . # List files to confirm the chart is pulled
+          helm show chart ./${{ inputs.helm_chart_name }}-${{ inputs.helm_chart_version }}.tgz

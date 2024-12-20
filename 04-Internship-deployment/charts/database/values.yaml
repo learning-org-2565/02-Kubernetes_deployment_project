@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  tag: "14"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5432
+
+resources: {}
+
+persistence:
+  enabled: true
+  storageClass: "standard" # Update based on your GKE storage class
+  accessMode: "ReadWriteOnce"
+  size: "10Gi"
+
+env:
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "securepassword"
+  POSTGRES_DB: "mydb"
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
