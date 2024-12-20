@@ -1,0 +1,83 @@
+name: 09-helm-internship
+
+on:
+  workflow_dispatch:
+    inputs:
+      gcp_project:
+        description: 'Select the GCP project'
+        default: 'turnkey-guild-441104-f3'
+        required: true
+        type: choice
+        options:
+          - 'turnkey-guild-441104-f3'
+      gcp_region:
+        description: 'Select the GCP region for Artifact Registry'
+        default: 'us-central1'
+        required: true
+        type: choice
+        options:
+          - 'us-central1'
+          - 'asia-southeast1'
+          - 'europe-west1'
+      helm_chart_path:
+        description: 'Select the Helm chart directory'
+        default: '04-Internship-deployment/charts/frontend'
+        required: true
+        options:
+          - '03-myapp-chart'
+          - '04-Internship-deployment/charts/frontend'
+      helm_chart_version:
+        description: 'Set the Helm chart version'
+        default: '1.0.0'
+        required: true
+
+jobs:
+  helm-package-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.gcp_project }}
+          install_components: 'beta'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Authenticate Helm with Artifact Registry
+        run: |
+          gcloud auth print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://${{ inputs.gcp_region }}-docker.pkg.dev
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.1
+
+      - name: Package the Helm Chart
+        run: |
+          helm package ${{ inputs.helm_chart_path }} --version ${{ inputs.helm_chart_version }}
+          echo "Packaged Helm Chart:"
+          ls -al
+
+      - name: Upload Helm Chart to Artifact Registry
+        run: |
+          export HELM_PACKAGE=$(ls *.tgz | grep ${{ inputs.helm_chart_path }} | head -n 1)
+          export REGISTRY_URL="${{ inputs.gcp_region }}-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
+
+          echo "Uploading Helm package: $HELM_PACKAGE to Artifact Registry: $REGISTRY_URL"
+          helm push $HELM_PACKAGE oci://${REGISTRY_URL}
+
+      - name: Pull Helm Chart from Artifact Registry
+        run: |
+          export REGISTRY_URL="${{ inputs.gcp_region }}-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
+          helm pull oci://$REGISTRY_URL/frontend --version ${{ inputs.helm_chart_version }}
+
+      - name: Verify Downloaded Helm Chart
+        run: |
+          helm show chart frontend-${{ inputs.helm_chart_version }}.tgz
+          ls -al frontend-${{ inputs.helm_chart_version }}.tgz
