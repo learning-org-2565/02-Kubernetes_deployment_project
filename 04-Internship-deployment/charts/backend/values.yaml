@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  repository: arun2565/backend-internship-app
+  tag: tag15
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 9005
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: backend.myapp.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+env:
+  DATABASE_URL: "postgresql+psycopg2://postgres:password@db-service:5432/mydb"
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

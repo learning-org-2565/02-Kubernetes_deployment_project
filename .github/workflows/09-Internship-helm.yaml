@@ -26,6 +26,7 @@ on:
         options:
           - '03-myapp-chart'
           - '04-Internship-deployment/charts/frontend'
+        type: choice
       helm_chart_version:
         description: 'Set the Helm chart version'
         default: '1.0.0'
