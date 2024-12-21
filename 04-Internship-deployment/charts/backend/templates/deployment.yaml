@@ -1,25 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-backend
+  name: {{ include "backend.fullname" . }}
   labels:
-    app: {{ .Chart.Name }}
+    {{- include "backend.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: {{ include "backend.name" . }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        {{- include "backend.labels" . | nindent 8 }}
     spec:
       containers:
-      - name: backend
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        env:
-        - name: DATABASE_URL
-          value: "{{ .Values.env.DATABASE_URL }}"
-        ports:
-        - containerPort: 9005
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: DATABASE_URL
+              value: {{ .Values.database.url | quote }}
+      restartPolicy: Always
