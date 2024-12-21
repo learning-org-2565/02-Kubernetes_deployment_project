@@ -1,4 +1,4 @@
-name: 10-helm-deployment
+name: 11.2-helm-deployment
 
 on:
   workflow_dispatch:
