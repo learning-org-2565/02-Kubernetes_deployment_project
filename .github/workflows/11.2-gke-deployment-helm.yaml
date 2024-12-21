@@ -1,0 +1,132 @@
+name: 10-helm-deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Action to perform with the Helm chart (apply or delete)"
+        default: "apply"
+        type: choice
+        options:
+          - apply
+          - delete
+      gke_env:
+        description: "Select the GKE environment"
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
+      gke_cluster_name:
+        description: "Select the GKE cluster name"
+        default: "sap-dev-gke-cluster"
+        required: true
+        type: choice
+        options:
+          - tmproject-dev-private-cluster
+          - sap-dev-gke-cluster
+          - gke-public-cluster
+      gcp_project:
+        description: "Select the GCP project"
+        default: "turnkey-guild-441104-f3"
+        required: true
+        type: choice
+        options:
+          - turnkey-guild-441104-f3
+      gke_location:
+        description: "GCP region or zone of the cluster"
+        default: "us-central1"
+        required: true
+        options:
+          - us-east1-b
+          - asia-southeast1
+          - us-central1
+        type: choice
+      helm_chart_name:
+        description: "Enter the Helm chart name (frontend/backend)"
+        default: "frontend"
+        required: true
+        options:
+          - frontend
+          - backend
+        type: choice
+      helm_chart_version:
+        description: "Set the Helm chart version to deploy"
+        default: "1.0.8"
+        required: true
+      helm_release_name:
+        description: "Helm release name for the application"
+        default: "myappchart"
+        required: true
+
+jobs:
+  helm-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      # Set up Google Cloud SDK
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.gcp_project }}
+          install_components: 'beta'
+
+      # Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      # Install the gke-gcloud-auth-plugin
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin -q
+
+      # Authenticate Docker with Artifact Registry
+      - name: Authenticate Docker with Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ inputs.gke_location }}-docker.pkg.dev
+
+      # Authenticate with GKE
+      - name: Authenticate with GKE
+        run: |
+          gcloud container clusters get-credentials ${{ inputs.gke_cluster_name }} \
+            --zone ${{ inputs.gke_location }}
+
+      # Install Helm
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.1
+
+      # Pull the Helm chart from Artifact Registry
+      - name: Pull Helm Chart from Artifact Registry
+        run: |
+          # Registry URL dynamically determined
+          export REGISTRY_URL="${{ inputs.gke_location }}-docker.pkg.dev/${{ inputs.gcp_project }}/helm"
+          helm pull oci://$REGISTRY_URL/${{ inputs.helm_chart_name }} --version ${{ inputs.helm_chart_version }}
+          helm show chart ./${{ inputs.helm_chart_name }}-${{ inputs.helm_chart_version }}.tgz
+
+      # Purge Existing Helm Release (to avoid conflicts during deployment)
+      - name: Purge Existing Helm Release
+        run: |
+          helm uninstall ${{ inputs.helm_release_name }} --namespace ${{ inputs.gke_env }} || echo "No existing release found to uninstall"
+
+      # Deploy the Helm chart (apply or upgrade)
+      - name: Deploy Helm Chart
+        if: ${{ inputs.action == 'apply' }}
+        run: |
+          helm upgrade --install ${{ inputs.helm_release_name }} \
+            ./${{ inputs.helm_chart_name }}-${{ inputs.helm_chart_version }}.tgz \
+            --namespace ${{ inputs.gke_env }} --create-namespace
+
+      # Uninstall the Helm release
+      - name: Uninstall Helm Chart
+        if: ${{ inputs.action == 'delete' }}
+        run: |
+          helm uninstall ${{ inputs.helm_release_name }} --namespace ${{ inputs.gke_env }}
