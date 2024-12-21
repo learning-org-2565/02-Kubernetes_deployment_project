@@ -20,7 +20,8 @@ ingress:
   tls: []
 
 env:
-  DATABASE_URL: "postgresql+psycopg2://postgres:password@db-service:5432/mydb"
+  DATABASE_URL: postgresql+asyncpg://postgres:password@junction.proxy.rlwy.net:45520/railway"
+
 
 resources: {}
 nodeSelector: {}
