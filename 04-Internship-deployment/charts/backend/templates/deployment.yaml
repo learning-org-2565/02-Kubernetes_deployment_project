@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: {{ include "backend.fullname" . }}
   labels:
-{{- include "backend.labels" . | nindent 4 }}
+    app: {{ include "backend.name" . }}
+    {{- include "backend.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -12,7 +13,8 @@ spec:
   template:
     metadata:
       labels:
-{{- include "backend.labels" . | nindent 8 }}
+        app: {{ include "backend.name" . }}
+        {{- include "backend.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
