@@ -3,7 +3,6 @@ fullnameOverride: ""
 nameOverride: ""
 
 
-
 image:
   repository: arun2565/backend-internship-app
   tag: tag15
