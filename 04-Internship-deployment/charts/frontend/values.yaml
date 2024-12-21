@@ -1,6 +1,6 @@
 nameOverride: ""
 fullnameOverride: ""
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: arun2565/main-internship-app
