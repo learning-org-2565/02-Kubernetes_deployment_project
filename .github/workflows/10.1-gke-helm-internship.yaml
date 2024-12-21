@@ -58,7 +58,7 @@ on:
         required: true
       helm_release_name:
         description: "Helm release name for the application"
-        default: "03-myapp-chart"
+        default: "myappchart"
         required: true
 
 jobs:
