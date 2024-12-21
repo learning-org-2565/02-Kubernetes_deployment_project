@@ -59,7 +59,10 @@ on:
         description: "Set the Helm chart version to deploy"
         default: "1.0.0"
         required: true
-      
+      helm_release_name:
+        description: "Helm release name for the application"
+        default: "03-myapp-chart"
+        required: true
 
 jobs:
   helm-deployment:
