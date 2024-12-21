@@ -4,7 +4,7 @@ nameOverride: ""
 
 image:
   repository: arun2565/backend-internship-app
-  tag: tag15
+  tag: 1.0.7
   pullPolicy: IfNotPresent
 
 service:
