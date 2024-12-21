@@ -87,6 +87,11 @@ jobs:
         run: |
           gcloud components install gke-gcloud-auth-plugin -q
 
+      - name: Authenticate Docker with Artifact Registry
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+
+
       - name: Authenticate with GKE
         run: |
           gcloud container clusters get-credentials ${{ inputs.gke_cluster_name }} \
