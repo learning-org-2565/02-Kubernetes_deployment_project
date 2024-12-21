@@ -51,6 +51,7 @@ on:
         type: choice
         options:
           - '03-myapp-chart'
+          - '04-Internship-deployment/charts/frontend'
           # Add other chart directories if you have more than one
 
 jobs:
