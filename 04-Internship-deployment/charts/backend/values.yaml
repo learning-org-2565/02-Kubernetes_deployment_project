@@ -1,4 +1,7 @@
 replicaCount: 2
+nameOverride: ""
+fullnameOverride: ""
+
 
 image:
   repository: arun2565/backend-internship-app
@@ -27,3 +30,7 @@ resources: {}
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+serviceAccount:
+  create: false
+  name: 
