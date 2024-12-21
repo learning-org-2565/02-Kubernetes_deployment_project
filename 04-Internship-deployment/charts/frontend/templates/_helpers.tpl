@@ -55,8 +55,12 @@ Create the name of the service account to use
 */}}
 {{- define "frontend.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "frontend.fullname" .) .Values.serviceAccount.name }}
+{{- if .Values.serviceAccount.name }}
+{{ .Values.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{ include "frontend.fullname" . }}
+{{- end }}
+{{- else }}
+default
 {{- end }}
 {{- end }}
