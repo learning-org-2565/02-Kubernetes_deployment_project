@@ -1,4 +1,7 @@
-name: 09-helm-internship
+name: 09-helm package and upload in the artifact registry
+
+# This is repo contain helm package, versioning and upload in the artifact registry
+# it will take the helm charst from repos and make helm package
 
 on:
   workflow_dispatch:
