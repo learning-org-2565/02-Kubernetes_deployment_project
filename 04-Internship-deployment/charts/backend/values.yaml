@@ -21,9 +21,10 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
   tls: []
+env:
+  - name: DATABASE_URL
+    value: "postgresql+asyncpg://postgres:password@junction.proxy.rlwy.net:45520/railway"
 
-database:
-  url: "postgresql+asyncpg://postgres:password@junction.proxy.rlwy.net:45520/railway"
 
 
 resources: {}
