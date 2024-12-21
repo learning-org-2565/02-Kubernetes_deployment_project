@@ -1,3 +1,5 @@
+nameOverride: ""
+fullnameOverride: ""
 replicaCount: 2
 
 image:
@@ -28,6 +30,3 @@ affinity: {}
 serviceAccount:
   create: false
   name: ""
-
-
-
