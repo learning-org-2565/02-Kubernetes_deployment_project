@@ -22,5 +22,5 @@ spec:
             - containerPort: {{ .Values.service.port }}
           env:
             - name: DATABASE_URL
-              value: {{ .Values.database.url | quote }}
+              value: {{ .values.database.url | quote }}
       restartPolicy: Always
