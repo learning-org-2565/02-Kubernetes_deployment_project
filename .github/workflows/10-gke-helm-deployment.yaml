@@ -45,6 +45,7 @@ on:
           - us-east1-b
           - asia-southeast1
           - us-central1
+        type: choice
       helm_chart_name:
         description: "Enter the Helm chart name (e.g., frontend, backend, database)"
         default: "frontend"
@@ -53,6 +54,7 @@ on:
           - frontend
           - backend
           - database
+        type: choice
       helm_chart_version:
         description: "Set the Helm chart version to deploy"
         default: "1.0.0"
