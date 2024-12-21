@@ -2,7 +2,6 @@ replicaCount: 2
 fullnameOverride: ""
 nameOverride: ""
 
-
 image:
   repository: arun2565/backend-internship-app
   tag: tag15
@@ -12,20 +11,8 @@ service:
   type: ClusterIP
   port: 9005
 
-ingress:
-  enabled: false
-  annotations: {}
-  hosts:
-    - host: backend.myapp.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-env:
-  - name: DATABASE_URL
-    value: "postgresql+asyncpg://postgres:password@junction.proxy.rlwy.net:45520/railway"
-
-
+database:
+  url: "postgresql+asyncpg://postgres:password@junction.proxy.rlwy.net:45520/railway"  # Fixed and referenced properly
 
 resources: {}
 nodeSelector: {}
@@ -34,4 +21,4 @@ affinity: {}
 
 serviceAccount:
   create: false
-  name: 
+  name: ""

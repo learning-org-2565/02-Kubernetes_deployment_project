@@ -7,7 +7,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: 9005
-    targetPort: 9005
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
   selector:
-    app: {{ .Chart.Name }}
+    app: {{ include "backend.name" . }}
