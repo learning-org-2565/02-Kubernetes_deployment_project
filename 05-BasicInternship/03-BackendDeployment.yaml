@@ -30,12 +30,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: my-proshop-secrets
-              key: mongodb+srv://arunponugoti2565:yFb6W7mPgFdogvsV@project2565.svvyp.mongodb.net/myDatabase?retryWrites=true&w=majority&appName=project2565
+              key: MONGO_URI
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
               name: my-proshop-secrets
-              key: abc123
+              key: JWT_SECRET
 
 ---
 apiVersion: v1
@@ -52,3 +52,20 @@ spec:
   ports:
     - port: 5000        # The Service port inside the cluster
       targetPort: 5000  # Matches containerPort in Deployment
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-proshop-secrets
+type: Opaque
+data:
+  # The key here is "MONGO_URI" (valid name),
+  # and the value is the base64-encoded connection string.
+  # Example: echo -n "mongodb+srv://user:pass@host/mydb?retryWrites=true" | base64
+  MONGO_URI: bW9uZ29kYnMrOnVzZXJwYXNzQGhvc3QvbXlkYj9yZXRyeVdyaXRlcz10cnVlCg==
+  
+  # Another example key/value
+  JWT_SECRET: YWJjMTIz
+
