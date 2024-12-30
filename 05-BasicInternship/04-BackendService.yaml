@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: proshop-backend-service
+  labels:
+    app: proshop-backend
+spec:
+  selector:
+    app: proshop-backend
+  # Exposes the backend on an internal ClusterIP
+  ports:
+    - name: http
+      port: 5000       # Service port
+      targetPort: 5000 # Container port
