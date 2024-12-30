@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proshop-frontend-deployment
+  labels:
+    app: proshop-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: proshop-frontend
+  template:
+    metadata:
+      labels:
+        app: proshop-frontend
+    spec:
+      containers:
+        - name: proshop-frontend
+          # Use the image you built & pushed to a registry
+          image: gcr.io/<YOUR_PROJECT_ID>/proshop-frontend:v1
+          ports:
+            - containerPort: 80
