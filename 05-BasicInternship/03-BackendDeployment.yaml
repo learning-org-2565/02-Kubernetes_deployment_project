@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proshop-backend-deployment
+  labels:
+    app: proshop-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: proshop-backend
+  template:
+    metadata:
+      labels:
+        app: proshop-backend
+    spec:
+      containers:
+        - name: proshop-backend
+          # Use the image you built & pushed to a registry
+          image: gcr.io/<YOUR_PROJECT_ID>/proshop-backend:v1
+          ports:
+            - containerPort: 5000
+          # Example of pulling secrets from the 'proshop-secrets' Secret
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: proshop-secrets
+                  key: MONGO_URI
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: proshop-secrets
+                  key: JWT_SECRET
