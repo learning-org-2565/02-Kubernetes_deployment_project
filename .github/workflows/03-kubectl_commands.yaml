@@ -20,6 +20,7 @@ on:
         options:
           - 'tmproject-dev-private-cluster'
           - 'sap-dev-gke-cluster'
+          - ' gke-public-cluster'
       gcp_project:
         description: 'Select the project'
         default: 'turnkey-guild-441104-f3'
@@ -43,6 +44,7 @@ on:
         options:
           - 'us-east1-b'
           - 'asia-southeast1'
+          - 'us-central1'
       manifest_file:
         description: 'Select the manifest deployment file'
         default: '02-replicasets.yaml'
@@ -54,10 +56,16 @@ on:
           - '03-Deployment_manifest.yaml'
           - '04-Service_manifest.yaml'
           - '05-ReplicaSet.yaml'
+          - '01-FrontendDeployment.yaml'
+
       kubectl-command:
         description: 'Specify the kubectl command to execute'
         default: 'kubectl get pods'
         required: false
+        type: choice
+        options:
+          - 'kubectl apply -f 01-FrontendDeployment.yaml'
+
 
 jobs:
   k8s-deployment:
