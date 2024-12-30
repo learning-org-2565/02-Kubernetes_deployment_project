@@ -15,20 +15,40 @@ spec:
         app: proshop-backend
     spec:
       containers:
-        - name: proshop-backend
-          # Use the image you built & pushed to a registry
-          image: gcr.io/<YOUR_PROJECT_ID>/proshop-backend:v1
-          ports:
-            - containerPort: 5000
-          # Example of pulling secrets from the 'proshop-secrets' Secret
-          env:
-            - name: MONGO_URI
-              valueFrom:
-                secretKeyRef:
-                  name: proshop-secrets
-                  key: MONGO_URI
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: proshop-secrets
-                  key: JWT_SECRET
+      - name: proshop-backend
+        # Public Docker image for your backend
+        image: arun2565/my-app-backend:tag17
+        ports:
+        - containerPort: 5000
+        
+        # Example environment variables (optional)
+        # Uncomment & edit if needed:
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: my-proshop-secrets
+              key: mongodb+srv://arunponugoti2565:yFb6W7mPgFdogvsV@project2565.svvyp.mongodb.net/myDatabase?retryWrites=true&w=majority&appName=project2565
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: my-proshop-secrets
+              key: abc123
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proshop-backend-service
+  labels:
+    app: proshop-backend
+spec:
+  # Currently only accessible within the cluster
+  type: ClusterIP
+  selector:
+    app: proshop-backend
+  ports:
+    - port: 5000        # The Service port inside the cluster
+      targetPort: 5000  # Matches containerPort in Deployment
