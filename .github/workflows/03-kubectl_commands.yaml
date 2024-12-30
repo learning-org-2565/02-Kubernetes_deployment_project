@@ -57,6 +57,7 @@ on:
           - '04-Service_manifest.yaml'
           - '05-ReplicaSet.yaml'
           - '05-BasicInternship/01-FrontendDeployment.yaml'
+          - '05-BasicInternship/03-BackendDeployment.yaml'
 
       kubectl-command:
         description: 'Specify the kubectl command to execute'
