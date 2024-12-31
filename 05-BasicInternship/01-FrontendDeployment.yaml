@@ -17,7 +17,7 @@ spec:
       containers:
       - name: proshop-frontend
         # Using the public image on Docker Hub
-        image: arun2565/my-app-frontend:tag16
+        image: arun2565/my-app-frontend:tag19
         ports:
         - containerPort: 80
 ---
