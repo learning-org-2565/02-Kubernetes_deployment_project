@@ -17,7 +17,7 @@ spec:
       containers:
       - name: proshop-backend
         # Public Docker image for your backend
-        image: arun2565/my-app-backend:tag17
+        image: arun2565/my-app-backend:tag21
         ports:
         - containerPort: 5000
         env:
