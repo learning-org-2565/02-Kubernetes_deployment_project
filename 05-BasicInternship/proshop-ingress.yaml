@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proshop-ingress
+  annotations:
+    # Tells GKE to use the GCE ingress
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - host: gkecloud.com
+      http:
+        paths:
+          # All requests that start with /api go to the backend
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: proshop-backend-service
+                port:
+                  number: 5000
+
+          # Everything else goes to the frontend
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proshop-frontend-service
+                port:
+                  number: 80
