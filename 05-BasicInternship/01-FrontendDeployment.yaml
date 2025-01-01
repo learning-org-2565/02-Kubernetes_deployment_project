@@ -28,7 +28,7 @@ metadata:
   labels:
     app: proshop-frontend
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: proshop-frontend
   ports:
