@@ -3,14 +3,14 @@ kind: Ingress
 metadata:
   name: proshop-ingress
   annotations:
-    # Tells GKE to use the GCE ingress
-    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.class: "gce"  # Use GCE Ingress
+    networking.gke.io/managed-certificates: "gkecloud-com-cert"  # Reference the managed certificate
 spec:
   rules:
-    - host: gkecloud.com
+    - host: gkecloud.com  # The domain name
       http:
         paths:
-          # All requests that start with /api go to the backend
+          # Backend service for API calls
           - path: /api
             pathType: Prefix
             backend:
@@ -18,8 +18,7 @@ spec:
                 name: proshop-backend-service
                 port:
                   number: 5000
-
-          # Everything else goes to the frontend
+          # Frontend service for everything else
           - path: /
             pathType: Prefix
             backend:
