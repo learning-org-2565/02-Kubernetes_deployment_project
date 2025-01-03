@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: gkecloud-com-cert  # Same as referenced in the Ingress
+spec:
+  domains:
+    - gkecloud.com  # Your domain name
