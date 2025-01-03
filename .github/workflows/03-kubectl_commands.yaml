@@ -59,6 +59,7 @@ on:
           - '05-BasicInternship/01-FrontendDeployment.yaml'
           - '05-BasicInternship/03-BackendDeployment.yaml'
           - '05-BasicInternship/proshop-ingress.yaml'
+          - '05-BasicInternship/06-managed-certificate.yaml'
 
       kubectl-command:
         description: 'Specify the kubectl command to execute'
