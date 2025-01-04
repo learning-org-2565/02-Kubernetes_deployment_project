@@ -8,4 +8,4 @@ spec:
 
 # kubectl describe managedcertificate gkecloud-com-cert
 # this command will give you full info about this script , if status is provisioning it is still , 
-# you have to wait for few mins, if the status is looks like active then it is working
+# you have to wait for few mins, if the status is looks like active then it is working, it maay take 5mins to 15mins approx
