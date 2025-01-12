@@ -7,7 +7,7 @@ metadata:
     networking.gke.io/managed-certificates: "gkecloud-com-cert"  # Reference the managed certificate
 spec:
   rules:
-    - host: gkecloud.com  # The domain name
+    - host: dummy.gkecloud.com  # The domain name
       http:
         paths:
           # Backend service for API calls
