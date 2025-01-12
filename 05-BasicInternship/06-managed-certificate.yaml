@@ -4,7 +4,7 @@ metadata:
   name: gkecloud-com-cert  # Same as referenced in the Ingress
 spec:
   domains:
-    - dommy.gkecloud.com  # Your domain name
+    - dummy.gkecloud.com   # Your domain name
 
 # kubectl describe managedcertificate gkecloud-com-cert
 # this command will give you full info about this script , if status is provisioning it is still , 
